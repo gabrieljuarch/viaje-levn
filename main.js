@@ -144,3 +144,34 @@ document.querySelectorAll('.gallery-carousel .tile, .lightbox-tile').forEach(el 
   el.addEventListener('contextmenu', e => e.preventDefault());
   el.addEventListener('dragstart', e => e.preventDefault());
 });
+
+// ============ PARALLAX (solo móvil, reemplaza el stacking cards) ============
+const mobileQuery = window.matchMedia('(max-width: 640px)');
+const parallaxCards = document.querySelectorAll('main .card');
+let parallaxTicking = false;
+
+function applyParallax() {
+  parallaxTicking = false;
+  if (!mobileQuery.matches) {
+    parallaxCards.forEach(card => { card.querySelector('.card-inner').style.transform = ''; });
+    return;
+  }
+  const vh = window.innerHeight;
+  parallaxCards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    const progress = Math.max(-1, Math.min(1, (vh / 2 - center) / vh));
+    card.querySelector('.card-inner').style.transform = `translateY(${progress * 26}px)`;
+  });
+}
+
+function queueParallax() {
+  if (!parallaxTicking) {
+    parallaxTicking = true;
+    requestAnimationFrame(applyParallax);
+  }
+}
+
+window.addEventListener('scroll', queueParallax, { passive: true });
+window.addEventListener('resize', queueParallax);
+applyParallax();

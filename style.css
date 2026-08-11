@@ -310,7 +310,16 @@ footer .fine { color: var(--text-dim-2); font-size: 0.88rem; }
   .lightbox-nav { width: 40px; height: 40px; font-size: 1.4rem; }
   .lightbox-prev { left: 0.6rem; }
   .lightbox-next { right: 0.6rem; }
-  .card { --card-pt: calc(var(--nav-h) + 2.2rem); padding-bottom: 20vh; min-height: auto; }
+  /* Sin efecto stacking cards en móvil: flujo normal, sin position:sticky */
+  .card {
+    --card-pt: calc(var(--nav-h) + 2.2rem);
+    position: relative; top: auto;
+    padding-bottom: 3rem;
+    min-height: auto;
+    box-shadow: 0 -14px 30px -20px rgba(0,0,0,0.4);
+  }
+  .card .wrap { max-height: none; overflow-y: visible; }
+  .card .card-inner { will-change: transform; }
   .t-item { grid-template-columns: 70px 20px 1fr; }
   .countdown { gap: 0.5rem; }
   .countdown .cell { min-width: 60px; }

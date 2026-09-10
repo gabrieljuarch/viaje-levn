@@ -1,5 +1,5 @@
 // ============ FECHAS CLAVE ============
-const TRIP_DATE = new Date('2026-11-06T04:15:00-06:00');
+const TRIP_DATE = new Date('2026-11-13T04:15:00-06:00');
 const DEADLINE_ANTICIPO = new Date('2026-09-03T23:59:59-06:00');
 const DEADLINE_TOTAL = new Date('2026-10-29T23:59:59-06:00');
 

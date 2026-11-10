@@ -94,3 +94,61 @@ document.querySelectorAll('.faq-item').forEach(item => {
     if (!wasOpen) item.classList.add('open');
   });
 });
+
+// ============ GALERIA: CARRUSEL + LIGHTBOX ============
+const TOTAL_FOTOS = 9;
+let lightboxIndex = 1;
+
+function scrollCarousel(dir) {
+  const track = document.getElementById('gallery-carousel');
+  if (!track) return;
+  const tile = track.querySelector('.tile');
+  const step = tile ? tile.getBoundingClientRect().width + 16 : 240;
+  track.scrollBy({ left: dir * step, behavior: 'smooth' });
+}
+
+function renderLightbox() {
+  const tile = document.getElementById('lightbox-tile');
+  if (!tile) return;
+  tile.innerHTML = '';
+  const img = document.createElement('img');
+  img.src = `cdmx-${lightboxIndex}.webp`;
+  img.alt = `Foto del viaje ${lightboxIndex}`;
+  img.draggable = false;
+  img.oncontextmenu = () => false;
+  tile.appendChild(img);
+}
+
+function openLightbox(index) {
+  lightboxIndex = index;
+  renderLightbox();
+  document.getElementById('lightbox')?.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(event) {
+  if (event && event.target.closest('.lightbox-tile')) return;
+  document.getElementById('lightbox')?.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function lightboxStep(event, dir) {
+  event.stopPropagation();
+  lightboxIndex = ((lightboxIndex - 1 + dir + TOTAL_FOTOS) % TOTAL_FOTOS) + 1;
+  renderLightbox();
+}
+
+document.addEventListener('keydown', (e) => {
+  const lb = document.getElementById('lightbox');
+  if (!lb || !lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') lightboxStep(e, 1);
+  if (e.key === 'ArrowLeft') lightboxStep(e, -1);
+});
+
+// Disuade el clic derecho / arrastre sobre las fotos. Esto NO impide guardarlas
+// de forma definitiva (capturas de pantalla, DevTools, etc. siempre pueden hacerlo).
+document.querySelectorAll('.gallery-carousel .tile, .lightbox-tile').forEach(el => {
+  el.addEventListener('contextmenu', e => e.preventDefault());
+  el.addEventListener('dragstart', e => e.preventDefault());
+});
